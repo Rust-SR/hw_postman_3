@@ -291,6 +291,83 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "get_test_user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function() {\r",
+							"    pm.response.to.have.status(200); \r",
+							"})\r",
+							"\r",
+							"const jsonData = pm.response.json();\r",
+							"const reqData = request.data;\r",
+							"\r",
+							"pm.test(\"Check all structures\", function() {\r",
+							"    pm.expect(jsonData).to.have.property('age');\r",
+							"    pm.expect(jsonData).to.have.property('family');\r",
+							"    pm.expect(jsonData.family).to.have.property('children');\r",
+							"    pm.expect(jsonData.family).to.have.property('u_salary_1_5_year');\r",
+							"    pm.expect(jsonData).to.have.property('name');\r",
+							"    pm.expect(jsonData).to.have.property('salary');\r",
+							"})\r",
+							"\r",
+							"// Проверить что занчение поля name = значению переменной name из окружения\r",
+							"pm.test(\"Check name\", function() {\r",
+							"    pm.expect(jsonData.name).to.eql(reqData.name);\r",
+							"})\r",
+							"\r",
+							"// Проверить что занчение поля age в ответе соответсвует отправленному в запросе значению поля age\r",
+							"pm.test(\"Check name\", function() {\r",
+							"    pm.expect(jsonData.age).to.eql(reqData.age);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "age",
+							"value": "{{age}}",
+							"type": "text"
+						},
+						{
+							"key": "salary",
+							"value": "{{salary}}",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "{{name}}",
+							"type": "text"
+						},
+						{
+							"key": "auth_token",
+							"value": "{{token2}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/get_test_user",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"get_test_user"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
