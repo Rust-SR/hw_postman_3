@@ -209,6 +209,88 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "test_pet_info",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"})\r",
+							"\r",
+							"const jsonData = pm.response.json();\r",
+							"const reqData = request.data;\r",
+							"\r",
+							"//проверка структуры\r",
+							"pm.test(\"Check age, food, sleep\", function() {\r",
+							"    pm.expect(jsonData).to.have.property('age');\r",
+							"    pm.expect(jsonData).to.have.property('daily_food');\r",
+							"    pm.expect(jsonData).to.have.property('daily_sleep');\r",
+							"    pm.expect(jsonData).to.have.property('name');\r",
+							"})\r",
+							"\r",
+							"// проверка умножения\r",
+							"pm.test(\"Check age\", function() {\r",
+							"    pm.expect(jsonData.age).to.eql(+reqData.age);\r",
+							"})\r",
+							"pm.test(\"dayly_food\", function() {\r",
+							"    pm.expect(jsonData.daily_food).to.eql(reqData.weight*0.012);\r",
+							"})\r",
+							"pm.test(\"Check sleep\", function() {\r",
+							"    pm.expect(jsonData.daily_sleep).to.eql(reqData.weight*2.5);\r",
+							"})\r",
+							"pm.test(\"Name\", function() {\r",
+							"    pm.expect(jsonData.name).to.eql(reqData.name);\r",
+							"})\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "age",
+							"value": "7",
+							"type": "text"
+						},
+						{
+							"key": "weight",
+							"value": "20",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "Luky",
+							"type": "text"
+						},
+						{
+							"key": "auth_token",
+							"value": "{{token2}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/test_pet_info",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"test_pet_info"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
