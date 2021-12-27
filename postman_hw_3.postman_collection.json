@@ -1,0 +1,125 @@
+{
+	"info": {
+		"_postman_id": "92803168-332e-4234-96a5-b89b9db41ef5",
+		"name": "postman_hw_3",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"var token_2 = jsonData.token;\r",
+							"\r",
+							"pm.environment.set(\"token2\", token_2);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "login",
+							"value": "str",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "str",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/login",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user_info",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"})\r",
+							"const jsonData = pm.response.json();\r",
+							"const reqData = request.data;\r",
+							"\r",
+							"//Проверка структуры json в ответе.\r",
+							"pm.test(\"Test body\", function() {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property('person');\r",
+							"    pm.expect(jsonData.person).to.have.property('u_age');\r",
+							"    pm.expect(jsonData.person).to.have.property('u_name');\r",
+							"    pm.expect(jsonData.person).to.have.property('u_salary_1_5_year');\r",
+							"    pm.expect(jsonData).to.have.property('qa_salary_after_12_months');\r",
+							"    pm.expect(jsonData).to.have.property('qa_salary_after_6_months');\r",
+							"    pm.expect(jsonData).to.have.property('start_qa_salary');\r",
+							"})\r",
+							"\r",
+							"// В ответе указаны коэффициенты умножения salary, напишите тесты по проверке правильности результата перемножения на коэффициент.\r",
+							"pm.test(\"Salary multiplier test after 1.5 year\", function() {\r",
+							"    pm.expect(jsonData.person.u_salary_1_5_year).to.eql(jsonData.start_qa_salary*4);\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Salary multiplier test after 12 months\", function() {\r",
+							"    pm.expect(jsonData.qa_salary_after_12_months).to.eql(jsonData.start_qa_salary*2.9);\r",
+							"})\r",
+							"\r",
+							"pm.test(\"qa_salary_after_6_months\", function() {\r",
+							"    pm.expect(jsonData.qa_salary_after_6_months).to.eql(jsonData.start_qa_salary*2);\r",
+							"})\r",
+							"\r",
+							"// Достать значение из поля 'u_salary_1.5_year' и передать в поле salary запроса http://162.55.220.72:5005/get_test_user\r",
+							"var salary_hw_3 = jsonData.person.u_salary_1_5_year;\r",
+							"pm.environment.set(\"salary_hw_3\", salary_hw_3);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"{{name}}\",\r\n    \"age\": \"{{age}}\",\r\n    \"salary\": \"{{salary}}\",\r\n    \"auth_token\": \"{{token2}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/user_info",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"user_info"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
